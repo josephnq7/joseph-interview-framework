@@ -91,9 +91,9 @@ class Calculator
     }
 
     /**
-     * @param string $operator
+     * @param string|null $operator
      */
-    public function setOperator(string $operator): void
+    public function setOperator(?string $operator): void
     {
         $this->operator = $operator;
     }
