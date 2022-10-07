@@ -67,7 +67,7 @@ class ExampleControllerTest extends BaseCase
         $this->assertSame($curl->getStatusCode(), 400);
         $this->assertNull($curl->getError());
         $this->assertNotEmpty($response);
-        $this->assertSame('Example code missing', $response['message']);
+        $this->assertSame('code is required', $response['message']);
     }
 
     /**
@@ -87,7 +87,7 @@ class ExampleControllerTest extends BaseCase
         $this->assertSame($curl->getStatusCode(), 400);
         $this->assertNull($curl->getError());
         $this->assertNotEmpty($response);
-        $this->assertSame('Example description missing', $response['message']);
+        $this->assertSame('description is required', $response['message']);
     }
 
     /**

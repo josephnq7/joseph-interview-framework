@@ -43,7 +43,7 @@ RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime && \
     # Setup all cache perms
     chown -R www-data:www-data /code/cache
 
-# RUN pecl install xdebug-2.9.7 && docker-php-ext-enable xdebug
+#RUN pecl install xdebug-2.9.7 && docker-php-ext-enable xdebug
 
 
 # Complains about missing config file from mysqli install, so hack to get it to work.
