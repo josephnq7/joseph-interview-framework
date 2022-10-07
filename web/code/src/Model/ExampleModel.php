@@ -1,25 +1,35 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Example\Model;
 
-use Mini\Model\Model;
-
 /**
- * Example data.
+ * Example Model
+ *
+ * @property integer $id
+ * @property string $created
+ * @property string $code
+ * @property string $description
  */
-class ExampleModel extends Model
+class ExampleModel extends TableModel
 {
+    protected $fields = [
+        'id',
+        'created',
+        'code',
+        'description'
+    ];
+
     /**
-     * Get example data by ID.
+     * find data by id
      *
-     * @param int $id example id
-     *  
-     * @return array example data
+     * @param int $id
+     * @return ExampleModel|null
      */
-    public function get(int $id): array
+    public static function findById(int $id): ?ExampleModel
     {
+        $obj = null;
         $sql = '
             SELECT
                 example_id AS "id",
@@ -31,25 +41,71 @@ class ExampleModel extends Model
             WHERE
                 example_id = ?';
 
-        return $this->db->select([
-            'title'  => 'Get example data',
-            'sql'    => $sql,
-            'inputs' => [$id]
-        ]);
+        $db = container('Mini\Database\Database');
+
+        $data = $db->select([
+                                'title' => 'Get example data',
+                                'sql' => $sql,
+                                'inputs' => [$id]
+                            ]);
+
+        if ($data) {
+            $obj = new ExampleModel();
+            foreach ($data as $field => $value) {
+                if ($obj->hasProperty($field)) {
+                    $obj->{$field} = $value;
+                }
+            }
+        }
+
+        return $obj;
     }
 
     /**
-     * Create an example.
+     * validate data for fields
      *
-     * @param string $created     example created on
-     * @param string $code        example code
-     * @param string $description example description
-     *  
-     * @return int example id
+     * @return bool
      */
-    public function create(string $created, string $code, string $description): int
+    public function validate() : bool
     {
-        $sql = '
+        foreach ($this->fields as $field) {
+            switch ($field) {
+                case 'code':
+                    if (empty($this->{$field})) {
+                        $this->addError($field, "{$field} is required");
+                        break;
+                    }
+                    if (strlen($this->{$field}) > 50) {
+                        $this->addError($field, "{$field} is over 50 characters");
+                    }
+                    break;
+                case 'description':
+                    if (empty($this->{$field})) {
+                        $this->addError($field, "{$field} is required");
+                        break;
+                    }
+                    if (strlen($this->{$field}) > 255) {
+                        $this->addError($field, "{$field} is over 255 characters");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return !$this->hasError();
+    }
+
+    /**
+     * create Example record
+     *
+     * @return bool
+     */
+    public function save() : bool
+    {
+        $this->created = now();
+
+        if ($this->validate()) {
+            $sql = '
             INSERT INTO
                 ' . getenv('DB_SCHEMA') . '.master_example
             (
@@ -60,18 +116,21 @@ class ExampleModel extends Model
             VALUES
             (?,?,?)';
 
-        $id = $this->db->statement([
-            'title'  => 'Create example',
-            'sql'    => $sql,
-            'inputs' => [
-                $created,
-                $code,
-                $description
-            ]
-        ]);
+            $id = $this->db->statement([
+                           'title' => 'Create example',
+                           'sql' => $sql,
+                           'inputs' => [
+                               (string)$this->created,
+                               (string)$this->code,
+                               (string)$this->description
+                           ]
+           ]);
 
-        $this->db->validateAffected();
+            $this->db->validateAffected();
 
-        return $id;
+            $this->id = $id;
+            return true;
+        }
+        return false;
     }
 }
