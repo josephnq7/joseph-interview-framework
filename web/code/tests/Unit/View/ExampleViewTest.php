@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Example\Tests\Unit\Controller;
 
+use Example\Model\ExampleModel;
 use Example\Tests\BaseCase;
 use Mini\Controller\Exception\BadInputException;
 
@@ -21,7 +22,7 @@ class ExampleViewTest extends BaseCase
     {
         $this->mockDatabaseGetProcess();
 
-        $view = $this->getClass('Example\View\ExampleView')->get(1);
+        $view = $this->getClass('Example\View\ExampleView')->get(ExampleModel::findById(1));
 
         $this->assertNotEmpty($view);
         $this->assertIsString($view);
@@ -42,7 +43,7 @@ class ExampleViewTest extends BaseCase
         
         $this->mockDatabaseGetUnkownIdProcess();
 
-        $this->getClass('Example\View\ExampleView')->get(2);
+        $this->getClass('Example\View\ExampleView')->get(ExampleModel::findById(2));
     }
 
     /**

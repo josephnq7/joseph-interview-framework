@@ -25,11 +25,11 @@ class ExampleModel extends TableModel
      * find data by id
      *
      * @param int $id
-     * @return ExampleModel|null
+     * @return ExampleModel
      */
-    public static function findById(int $id): ?ExampleModel
+    public static function findById(int $id): ExampleModel
     {
-        $obj = null;
+        $obj = new ExampleModel();
         $sql = '
             SELECT
                 example_id AS "id",
@@ -50,7 +50,6 @@ class ExampleModel extends TableModel
                             ]);
 
         if ($data) {
-            $obj = new ExampleModel();
             foreach ($data as $field => $value) {
                 if ($obj->hasProperty($field)) {
                     $obj->{$field} = $value;

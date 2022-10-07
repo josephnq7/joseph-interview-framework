@@ -21,7 +21,7 @@ class ExampleModelTest extends BaseCase
 
         $example = ExampleModel::findById(1);
 
-        $this->assertEquals(true, $example instanceof ExampleModel);
+        $this->assertEquals(1, $example->id);
 
         // Look for the newly created example
         $this->assertStringContainsString('TESTCODE', $example->code);

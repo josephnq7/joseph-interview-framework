@@ -86,16 +86,6 @@ class ExampleControllerTest extends BaseCase
 
         $database->shouldReceive('validateAffected')->once();
 
-        $database->shouldReceive('select')
-            ->once()
-            ->withArgs($this->withDatabaseInput([1]))
-            ->andReturn([
-                'id'          => 1,
-                'created'     => '2020-07-14 12:00:00',
-                'code'        => 'TESTCODE',
-                'description' => 'Test description'
-            ]);
-
         $this->setMockDatabase($database);
     }
 }
