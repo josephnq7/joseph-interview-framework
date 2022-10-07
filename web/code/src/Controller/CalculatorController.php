@@ -14,6 +14,22 @@ use Mini\Http\Request;
  */
 class CalculatorController extends Controller
 {
+
+    /**
+     * @var Calculator|null
+     */
+    protected $model = null;
+
+    /**
+     * Setup.
+     *
+     * @param Calculator $model
+     */
+    public function __construct(Calculator $model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * Show the default page.
      * 
@@ -35,15 +51,12 @@ class CalculatorController extends Controller
      */
     public function do(Request $request): string
     {
-        $calculator = new Calculator();
+        $this->model->setNum1($request->request->get('num1'));
+        $this->model->setNum2($request->request->get('num2'));
+        $this->model->setOperator($request->request->get('operator'));
 
-        $calculator->setNum1($request->request->get('num1'));
-        $calculator->setNum2($request->request->get('num2'));
-        $calculator->setOperator($request->request->get('operator'));
-
-        $calculator->validate();
-
-        $result = $calculator->calc();
+        $this->model->validate();
+        $result = $this->model->calc();
 
         return view('app/calculator/result', ['result' => $result]);
     }
