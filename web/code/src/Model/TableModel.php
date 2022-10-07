@@ -82,7 +82,12 @@ abstract class TableModel extends Model
      */
     public function getErrors(?string $field = null) : array
     {
-        return ($field && isset($this->errors[$field])) ? [$field => $this->errors[$field]] : $this->errors;
+        if ($field) {
+            $errors = isset($this->errors[$field]) ? [$field => $this->errors[$field]] : [];
+        } else {
+            $errors = $this->errors;
+        }
+        return $errors;
     }
 
     /**
