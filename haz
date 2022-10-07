@@ -72,6 +72,7 @@ test-docker-compose-run() {
 }
 
 clear-container-cache() {
+    echo "CLEARING CACHE-------------------------******************************"
     init-docker-compose-run web bash /scripts/clear-container-cache.sh
 }
 
