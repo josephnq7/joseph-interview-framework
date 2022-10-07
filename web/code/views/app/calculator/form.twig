@@ -1,0 +1,47 @@
+<div class="row">
+	<div class="col">
+		<form id="calculator-form">
+			<div class="form-group">
+				<label for="num1">Number 1</label>
+				<input type="text" id="num1" class="form-control" name="num1" placeholder="Number 1">
+			</div>
+
+			<div class="form-group">
+				<label for="num2">Number 2</label>
+				<input type="text" id="num2" class="form-control" name="num2" placeholder="Number 2">
+			</div>
+
+			<input type="hidden" id="operator" name="operator" value="">
+
+			<button type="submit" class="btn btn-primary button-submit" value="add">Add</button>
+		</form>
+
+		<div id="calculator-result"></div>
+
+		<script>
+			document.querySelector('#calculator-form').onsubmit = function(e) {
+				// debugger;
+				e.preventDefault();
+
+				const data = new FormData(e.target);
+
+				// Ensure every input has a value
+				for (var [key, value] of data.entries()) {
+					if (!value) {
+						document.querySelector('#calculator-form input[name="' + key + '"]').focus();
+						return;
+					}
+				}
+
+				sendPost('calculator/do', data, view => document.querySelector('#calculator-result').innerHTML = view);
+			};
+
+			document.querySelector('.button-submit').onclick = function(e) {
+				// debugger;
+				const el = document.querySelector('#operator');
+				el.value = "+";
+			};
+
+		</script>
+	</div>
+</div>
